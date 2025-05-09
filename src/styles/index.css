@@ -1,3 +1,7 @@
+:root {
+  --color-bg: #110032;
+}
+
 *,
 *::after,
 *::before {
@@ -26,5 +30,78 @@ nav ul {
 
 body {
   margin: 0;
-  font-family: sans-serif;
+  font-family: 'DM Mono', monospace;
+  background-color: var(--color-bg);
+  color: white;
+}
+
+.general-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  /* justify-content: center; */
+  min-height: 100vh;
+  padding: 30px;
+}
+
+.text-display {
+  width: 100%;
+  padding: 24px 0px 24px 0px;
+  font-size: 1.25rem;
+  font-family: inherit;
+  text-align: center;
+  border-radius: 0.5rem;
+  border: none;
+  background-color: #241442;
+  color: #ffffffab;
+}
+
+.label-container {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 10px;
+  margin-inline: auto;
+  width: 100%;
+}
+
+.range-value {
+  font-size: 18px;
+  font-weight: 400;
+}
+
+.range-container {
+  width: 100%;
+  padding: 20px 14px 20px 14px;
+  border-radius: 0.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #241442;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.range-input {
+  accent-color: #7400e4;
+  height: 0.125rem;
+  width: 85%;
+}
+
+.button {
+  width: 100%;
+  background-color: #7400e4;
+  color: white;
+  font-family: 'DM Mono', monospace;
+  font-size: 1rem;
+  font-weight: 400;
+  border-radius: 0.5rem;
+  border: none;
+  padding: 20px 14px;
+  background-color: #a200d4;
+  background-image: linear-gradient(to right, #7944e7, #8300ab);
+}
+
+.button:hover {
+  transform: scale(0.95); /* reduce un 5% */
 }
