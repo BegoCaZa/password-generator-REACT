@@ -150,7 +150,7 @@ const generatePassword = (
     const randomIndex = Math.floor(Math.random() * characters.length);
     newPassword += characters[randomIndex];
   }
-  console.log(characters);
+
   return newPassword;
 };
 
