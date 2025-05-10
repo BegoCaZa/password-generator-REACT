@@ -6,7 +6,7 @@ const App = () => {
 
   //funcion que envia los datos a la funcion generadora de contraseñas por fuera
   const handlePasswordGenerator = () => {
-    generatePassword(passwordLength); //llama a la funcion y le da el largo
+    const newPassword = generatePassword(passwordLength); //llama a la funcion y le da el largo
     setPassword(newPassword); //va a actualizar el estado de la contraseña con la nueva contrase;a de la otra funcion
   };
 
@@ -38,7 +38,7 @@ const App = () => {
       </div>
       <button className='button' onClick={handlePasswordGenerator}>
         Generate Password
-      </button>{' '}
+      </button>
     </div>
   );
 };
