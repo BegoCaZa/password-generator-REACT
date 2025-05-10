@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { REQUIREMENTS_INFO } from './constants/elementCheckbox';
 
 const App = () => {
   const [passwordLength, setPasswordLenght] = useState(16); //cambia el largode la contraseña
@@ -36,6 +37,18 @@ const App = () => {
         />
         <span className='range-value'>32</span>
       </div>
+
+      {/* checkboxes */}
+      <div className='requirements-container'>
+        {REQUIREMENTS_INFO.map(requirement => (
+          <div key={requirement.id} className='requirements'>
+            <span className='requirement-text'>{requirement.text}</span>
+            <input type='checkbox' id={requirement.id} className='input' />
+            <label htmlFor={requirement.id} className='label'></label>
+          </div>
+        ))}
+      </div>
+
       <button className='button' onClick={handlePasswordGenerator}>
         Generate Password
       </button>
