@@ -1,9 +1,15 @@
 import { useState } from 'react';
-import { REQUIREMENTS_INFO } from './constants/elementCheckbox';
+// import { REQUIREMENTS_INFO } from './constants/elementCheckbox';
 
 const App = () => {
   const [passwordLength, setPasswordLenght] = useState(16); //cambia el largode la contraseña
   const [password, setPassword] = useState(''); //contraseña guardada
+
+  // avanzado.
+  const [requirementUpperCase, setRequirementUpperCase] = useState(false);
+  const [requirementLowerCase, setRequirementLowerCase] = useState(false);
+  const [requirementNumbers, setRequirementNumbers] = useState(false);
+  const [requirementSymbols, setRequirementSymbols] = useState(false);
 
   //funcion que envia los datos a la funcion generadora de contraseñas por fuera
   const handlePasswordGenerator = () => {
@@ -39,14 +45,62 @@ const App = () => {
       </div>
 
       {/* checkboxes */}
-      <div className='requirements-container'>
+      {/* <div className='requirements-container'>
         {REQUIREMENTS_INFO.map(requirement => (
           <div key={requirement.id} className='requirements'>
             <span className='requirement-text'>{requirement.text}</span>
-            <input type='checkbox' id={requirement.id} className='input' />
+            <input
+              type='checkbox'
+              id={requirement.id}
+              className='input'
+              onClick={() => changeCheckbox(requirement, setRequirement)}
+            />
             <label htmlFor={requirement.id} className='label'></label>
           </div>
         ))}
+      </div> */}
+
+      <div className='requirements-container'>
+        <div className='requirements'>
+          <span className='requirement-text'>Include Uppercase</span>
+          <input
+            type='checkbox'
+            id='uppercase'
+            className='input'
+            onChange={() => setRequirementUpperCase(!requirementUpperCase)}
+          />
+          <label htmlFor='uppercase' className='label'></label>
+        </div>
+        <div className='requirements'>
+          <span className='requirement-text'>Include Lowercase</span>
+          <input
+            type='checkbox'
+            id='lowercase'
+            className='input'
+            onChange={() => setRequirementLowerCase(!requirementLowerCase)}
+          />
+          <label htmlFor='lowercase' className='label'></label>
+        </div>
+        <div className='requirements'>
+          <span className='requirement-text'>Include Numbers</span>
+          <input
+            type='checkbox'
+            id='numbers'
+            className='input'
+            onChange={() => setRequirementNumbers(!requirementNumbers)}
+          />
+          <label htmlFor='numbers' className='label'></label>
+        </div>
+        <div className='requirements'>
+          <span className='requirement-text'>Include Symbols</span>
+          <input
+            type='checkbox'
+            id='symbols'
+            className='input'
+            onChange={() => setRequirementSymbols(!requirementSymbols)}
+          />
+          <label htmlFor='symbols' className='label'></label>
+        </div>
       </div>
 
       <button className='button' onClick={handlePasswordGenerator}>
