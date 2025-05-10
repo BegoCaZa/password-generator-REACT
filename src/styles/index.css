@@ -61,6 +61,7 @@ body {
   border: none;
   background-color: #241442;
   color: #ffffffab;
+  box-shadow: 1px 1px 5px #000000;
 }
 
 .label-container {
@@ -87,6 +88,7 @@ body {
   background-color: #241442;
   gap: 10px;
   margin-bottom: 20px;
+  box-shadow: 1px 1px 5px #000000;
 }
 
 .range-input {
