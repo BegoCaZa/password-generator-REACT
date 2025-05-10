@@ -145,6 +145,8 @@ const generatePassword = (
     characters += symbols; //agrega los caracteres simbolos
   }
 
+  console.log(characters);
+
   let newPassword = ''; //contraseña generada
   for (let i = 0; i < passwordLength; i++) {
     const randomIndex = Math.floor(Math.random() * characters.length);
