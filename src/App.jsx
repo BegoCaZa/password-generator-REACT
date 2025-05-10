@@ -13,7 +13,13 @@ const App = () => {
 
   //funcion que envia los datos a la funcion generadora de contraseñas por fuera
   const handlePasswordGenerator = () => {
-    const newPassword = generatePassword(passwordLength); //llama a la funcion y le da el largo
+    const newPassword = generatePassword(
+      passwordLength,
+      requirementUpperCase,
+      requirementLowerCase,
+      requirementNumbers,
+      requirementSymbols
+    ); //llama a la funcion y le da el largo con los requisitos
     setPassword(newPassword); //va a actualizar el estado de la contraseña con la nueva contrase;a de la otra funcion
   };
 
@@ -110,14 +116,41 @@ const App = () => {
   );
 };
 
-const generatePassword = passwordLength => {
-  const characters =
-    'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz01234567890!@#$%^&*()_+-={}[]:;<>,.?/';
+const generatePassword = (
+  passwordLength,
+  requirementUpperCase,
+  requirementLowerCase,
+  requirementNumbers,
+  requirementSymbols
+) => {
+  const uppercase = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+  const lowercase = 'abcdefghijklmnopqrstuvwxyz';
+  const numbers = '0123456789';
+  const symbols = '!@#$%^&*()_+-={}[]:;<>,.?/';
+
+  // const characters =
+  //   'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz01234567890!@#$%^&*()_+-={}[]:;<>,.?/';
+
+  const characters = ''; //banco de caracteres vacio al inicio
+  if (requirementUpperCase) {
+    characters += uppercase; //agrega los caracteres mayusculas
+  }
+  if (requirementLowerCase) {
+    characters += lowercase; //agrega los caracteres minusculas
+  }
+  if (requirementNumbers) {
+    characters += numbers; //agrega los caracteres numericos
+  }
+  if (requirementSymbols) {
+    characters += symbols; //agrega los caracteres simbolos
+  }
+
   let newPassword = ''; //contraseña generada
   for (let i = 0; i < passwordLength; i++) {
     const randomIndex = Math.floor(Math.random() * characters.length);
     newPassword += characters[randomIndex];
   }
+  console.log(characters);
   return newPassword;
 };
 
