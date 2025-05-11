@@ -186,7 +186,7 @@ const handleCharactersBank = (
 };
 
 const generatePassword = (passwordLength, allowedCharacters) => {
-  allowedCharacters = handleCharactersBank();
+  // allowedCharacters = handleCharactersBank();
 
   let newPassword = ''; //contraseña generada
 
