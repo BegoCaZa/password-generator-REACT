@@ -13,6 +13,14 @@ const App = () => {
 
   //funcion que envia los datos a la funcion generadora de contraseñas por fuera
   const handlePasswordGenerator = () => {
+    const allowedCharacters = handleCharactersBank(
+      requirementUpperCase,
+      requirementLowerCase,
+      requirementNumbers,
+      requirementSymbols
+    ); //llama a la funcion que maneja el banco de caracteres y le pasa los requisitos
+    console.log(allowedCharacters); //NO SE IMPRIMEEEEE
+
     const newPassword = generatePassword(passwordLength, allowedCharacters); //llama a la funcion y le da el largo con los caracteres permitidos
     setPassword(newPassword); //va a actualizar el estado de la contraseña con la nueva contrase;a de la otra funcion
   };
