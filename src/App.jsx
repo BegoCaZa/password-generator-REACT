@@ -13,13 +13,7 @@ const App = () => {
 
   //funcion que envia los datos a la funcion generadora de contraseñas por fuera
   const handlePasswordGenerator = () => {
-    const newPassword = generatePassword(
-      passwordLength,
-      requirementUpperCase,
-      requirementLowerCase,
-      requirementNumbers,
-      requirementSymbols
-    ); //llama a la funcion y le da el largo con los requisitos
+    const newPassword = generatePassword(passwordLength, allowedCharacters); //llama a la funcion y le da el largo con los caracteres permitidos
     setPassword(newPassword); //va a actualizar el estado de la contraseña con la nueva contrase;a de la otra funcion
   };
 
@@ -59,7 +53,7 @@ const App = () => {
               type='checkbox'
               id={requirement.id}
               className='input'
-              onClick={() => changeCheckbox(requirement, setRequirement)}
+              onChange={() => changeCheckbox(requirement, setRequirement)}
             />
             <label htmlFor={requirement.id} className='label'></label>
           </div>
@@ -109,48 +103,96 @@ const App = () => {
         </div>
       </div>
 
-      <button className='button' onClick={handlePasswordGenerator}>
+      <button
+        className='button'
+        disabled={isButtonDisabled()}
+        onClick={handlePasswordGenerator}
+      >
         Generate Password
       </button>
     </div>
   );
 };
 
-const generatePassword = (
-  passwordLength,
+const isButtonDisabled = (
   requirementUpperCase,
   requirementLowerCase,
   requirementNumbers,
   requirementSymbols
 ) => {
-  const uppercase = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-  const lowercase = 'abcdefghijklmnopqrstuvwxyz';
-  const numbers = '0123456789';
-  const symbols = '!@#$%^&*()_+-={}[]:;<>,.?/';
+  //DISABLE BUTTON
+  if (
+    !requirementUpperCase &&
+    !requirementLowerCase &&
+    !requirementNumbers &&
+    !requirementSymbols
+  ) {
+    return true; //si no hay requisitos, el boton se desactiva
+  }
+};
 
-  // const characters =
-  //   'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz01234567890!@#$%^&*()_+-={}[]:;<>,.?/';
+//esta funcion SOLO maneja el banco de caracteres, no genera la contraseña
+const handleCharactersBank = (
+  requirementUpperCase,
+  requirementLowerCase,
+  requirementNumbers,
+  requirementSymbols
+) => {
+  const charactersBank = {
+    symbols: '!@#$%^&*()_+-={}[]:;<>,.?/</>',
+    numbers: '1234567890',
+    uppercase: 'ABCDEFGHIJKLMNOPQRSTUVWXYZ',
+    lowercase: 'abcdefghijklmnopqrstuvwxyz'
+  };
 
-  const characters = ''; //banco de caracteres vacio al inicio
+  //variables globales
+  let characters = ''; //banco de caracteres vacio al inicio
+  //para asegurarse que tenga uno de cada unl
+  let allowedCharacters = '';
+
   if (requirementUpperCase) {
-    characters += uppercase; //agrega los caracteres mayusculas
+    const randomIndex = Math.floor(
+      Math.random() * charactersBank.uppercase.length
+    );
+    characters += charactersBank.uppercase[randomIndex]; //agrega un caracter random de los mayusculas (no super como hacerlo con BUCLE)
+    allowedCharacters += charactersBank.uppercase; //agrega las mayusculas
   }
   if (requirementLowerCase) {
-    characters += lowercase; //agrega los caracteres minusculas
+    const randomIndex = Math.floor(
+      Math.random() * charactersBank.lowercase.length
+    );
+    characters += charactersBank.lowercase[randomIndex];
+    allowedCharacters += charactersBank.lowercase;
   }
   if (requirementNumbers) {
-    characters += numbers; //agrega los caracteres numericos
+    const randomIndex = Math.floor(
+      Math.random() * charactersBank.numbers.length
+    );
+    characters += charactersBank.numbers[randomIndex];
+    allowedCharacters += charactersBank.numbers;
   }
   if (requirementSymbols) {
-    characters += symbols; //agrega los caracteres simbolos
+    const randomIndex = Math.floor(
+      Math.random() * charactersBank.symbols.length
+    );
+    characters += charactersBank.symbols[randomIndex];
+    allowedCharacters += charactersBank.symbols;
   }
 
   console.log(characters);
+  console.log(allowedCharacters);
+
+  return allowedCharacters; //retorna el banco de caracteres
+};
+
+const generatePassword = (passwordLength, allowedCharacters) => {
+  allowedCharacters = handleCharactersBank();
 
   let newPassword = ''; //contraseña generada
+
   for (let i = 0; i < passwordLength; i++) {
-    const randomIndex = Math.floor(Math.random() * characters.length);
-    newPassword += characters[randomIndex];
+    const randomIndex = Math.floor(Math.random() * allowedCharacters.length);
+    newPassword += allowedCharacters.charAt(randomIndex);
   }
 
   return newPassword;
