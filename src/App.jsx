@@ -1,5 +1,8 @@
 import { useState } from 'react';
-// import { REQUIREMENTS_INFO } from './constants/elementCheckbox';
+import { REQUIREMENTS_INFO } from './constants/elementCheckbox';
+import Password from './components/password/Password';
+import Range from './components/range/Range';
+import RequirementPassword from './components/requirementPassword/RequirementPassword';
 
 const charactersBank = {
   symbols: '!@#$%^&*()_+-={}[]:;<>,.?/</>',
@@ -29,49 +32,26 @@ const App = () => {
 
   return (
     <div className='general-container'>
-      <input
-        type='text'
-        className='text-display'
-        placeholder='P4$5W0RD!'
-        value={password}
-        readOnly
-      />
+      <Password password={password} />
       <div className='label-container'>
         <h2 className='range-value'>LENGHT:</h2>
         <span className='range-value'>{passwordLength}</span>
       </div>
-      <div className='range-container'>
-        <span className='range-value'>4</span>
-        <input
-          type='range'
-          className='range-input'
-          min='4'
-          max='32'
-          value={passwordLength}
-          step='1'
-          onChange={event => setPasswordLenght(event.target.value)}
-        />
-        <span className='range-value'>32</span>
-      </div>
+      <Range
+        passwordLength={passwordLength}
+        setPasswordLenght={setPasswordLenght}
+      />
 
+      {/* checkboxes */}
       {/* checkboxes */}
       <div className='requirements-container'>
         {REQUIREMENTS_INFO.map(requirement => (
-          <div key={requirement.id} className='requirements'>
-            <span className='requirement-text'>{requirement.text}</span>
-            <input
-              type='checkbox'
-              id={requirement.id}
-              className='input'
-              onChange={event =>
-                setCheckboxes({
-                  ...checkboxes,
-                  [requirement.id]: event.target.checked
-                })
-              }
-            />
-            <label htmlFor={requirement.id} className='label'></label>
-          </div>
+          <RequirementPassword
+            key={requirement.id}
+            checkboxes={checkboxes}
+            setCheckboxes={setCheckboxes}
+            {...requirement}
+          />
         ))}
       </div>
 
@@ -122,9 +102,9 @@ const App = () => {
 
       <button
         className='button'
-        disabled={isButtonDisabled()}
+        disabled={!isButtonDisabled(checkboxes)}
         onClick={() =>
-          handlePasswordGenerator(passwordLength, setPassword, checkboxes)
+          generatePassword(passwordLength, setPassword, checkboxes)
         }
       >
         Generate Password
@@ -133,96 +113,41 @@ const App = () => {
   );
 };
 
-//funcion que envia los datos a la funcion generadora de contraseñas por fuera
-const handlePasswordGenerator = () => {
-  const allowedCharacters = handleCharactersBank(
-    requirementUpperCase,
-    requirementLowerCase,
-    requirementNumbers,
-    requirementSymbols
-  ); //llama a la funcion que maneja el banco de caracteres y le pasa los requisitos
-  console.log(allowedCharacters); //NO SE IMPRIMEEEEE
-
-  const newPassword = generatePassword(passwordLength, allowedCharacters); //llama a la funcion y le da el largo con los caracteres permitidos
-  setPassword(newPassword); //va a actualizar el estado de la contraseña con la nueva contrase;a de la otra funcion
+const generateRandomNumber = length => {
+  return Math.floor(Math.random() * length);
 };
 
-const isButtonDisabled = (
-  requirementUpperCase,
-  requirementLowerCase,
-  requirementNumbers,
-  requirementSymbols
-) => {
+const isButtonDisabled = checkboxes => {
   //DISABLE BUTTON
-  if (
-    !requirementUpperCase &&
-    !requirementLowerCase &&
-    !requirementNumbers &&
-    !requirementSymbols
-  ) {
-    return true; //si no hay requisitos, el boton se desactiva
-  }
+  return Object.values(checkboxes).some(c => c);
 };
 
-//esta funcion SOLO maneja el banco de caracteres, no genera la contraseña
-const handleCharactersBank = (
-  requirementUpperCase,
-  requirementLowerCase,
-  requirementNumbers,
-  requirementSymbols
-) => {
-  //variables globales
-  let characters = ''; //banco de caracteres vacio al inicio
-  //para asegurarse que tenga uno de cada unl
+const getAllowedCharacters = checkboxes => {
   let allowedCharacters = '';
-  // newPassword=
+  newPassword = '';
 
-  if (requirementUpperCase) {
-    const randomIndex = Math.floor(
-      Math.random() * charactersBank.uppercase.length
-    );
-    characters += charactersBank.uppercase[randomIndex]; //agrega un caracter random de los mayusculas (no super como hacerlo con BUCLE)
-    allowedCharacters += charactersBank.uppercase; //agrega las mayusculas
-  }
-  if (requirementLowerCase) {
-    const randomIndex = Math.floor(
-      Math.random() * charactersBank.lowercase.length
-    );
-    characters += charactersBank.lowercase[randomIndex];
-    allowedCharacters += charactersBank.lowercase;
-  }
-  if (requirementNumbers) {
-    const randomIndex = Math.floor(
-      Math.random() * charactersBank.numbers.length
-    );
-    characters += charactersBank.numbers[randomIndex];
-    allowedCharacters += charactersBank.numbers;
-  }
-  if (requirementSymbols) {
-    const randomIndex = Math.floor(
-      Math.random() * charactersBank.symbols.length
-    );
-    characters += charactersBank.symbols[randomIndex];
-    allowedCharacters += charactersBank.symbols;
-  }
+  REQUIREMENTS_INFO.forEach(option => {
+    if (checkboxes[option.id]) {
+      allowedCharacters += charactersBank[option.id];
+      newPassword += charactersBank[option.id].charAt(
+        generateRandomNumber(charactersBank[option.id].length)
+      );
+    }
+  });
 
-  console.log(characters);
-  console.log(allowedCharacters);
-
-  return allowedCharacters; //retorna el banco de caracteres
+  return allowedCharacters;
 };
 
-const generatePassword = (passwordLength, allowedCharacters) => {
-  // allowedCharacters = handleCharactersBank();
+const generatePassword = (passwordLength, setPassword, checkboxes) => {
+  const allowedCharacters = getAllowedCharacters(checkboxes);
 
-  let newPassword = ''; //contraseña generada
-
-  for (let i = 0; i < passwordLength; i++) {
-    const randomIndex = Math.floor(Math.random() * allowedCharacters.length);
-    newPassword += allowedCharacters.charAt(randomIndex);
+  for (let i = newPassword.length; i < passwordLength; i++) {
+    const randomNumber = Math.floor(Math.random() * allowedCharacters.length);
+    // newPassword += allowedCharacters.charAt(randomNumber);
+    newPassword += allowedCharacters[randomNumber];
   }
 
-  return newPassword;
+  setPassword(newPassword);
 };
 
 export default App;

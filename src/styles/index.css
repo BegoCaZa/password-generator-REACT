@@ -170,7 +170,8 @@ body {
   translate: 40px 5px;
 }
 
-.button:disabled{
+.button:disabled {
   background-color: grey;
   background-image: none;
+  transform: none;
 }
