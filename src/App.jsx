@@ -1,29 +1,31 @@
 import { useState } from 'react';
 // import { REQUIREMENTS_INFO } from './constants/elementCheckbox';
 
+const charactersBank = {
+  symbols: '!@#$%^&*()_+-={}[]:;<>,.?/</>',
+  numbers: '1234567890',
+  uppercase: 'ABCDEFGHIJKLMNOPQRSTUVWXYZ',
+  lowercase: 'abcdefghijklmnopqrstuvwxyz'
+};
+
+let newPassword = '';
+
 const App = () => {
   const [passwordLength, setPasswordLenght] = useState(16); //cambia el largode la contraseña
   const [password, setPassword] = useState(''); //contraseña guardada
 
-  // avanzado.
-  const [requirementUpperCase, setRequirementUpperCase] = useState(false);
-  const [requirementLowerCase, setRequirementLowerCase] = useState(false);
-  const [requirementNumbers, setRequirementNumbers] = useState(false);
-  const [requirementSymbols, setRequirementSymbols] = useState(false);
+  // avanzado. agrugparlos cuando manejan los mismo
+  // const [requirementUpperCase, setRequirementUpperCase] = useState(false);
+  // const [requirementLowerCase, setRequirementLowerCase] = useState(false);
+  // const [requirementNumbers, setRequirementNumbers] = useState(false);
+  // const [requirementSymbols, setRequirementSymbols] = useState(false);
 
-  //funcion que envia los datos a la funcion generadora de contraseñas por fuera
-  const handlePasswordGenerator = () => {
-    const allowedCharacters = handleCharactersBank(
-      requirementUpperCase,
-      requirementLowerCase,
-      requirementNumbers,
-      requirementSymbols
-    ); //llama a la funcion que maneja el banco de caracteres y le pasa los requisitos
-    console.log(allowedCharacters); //NO SE IMPRIMEEEEE
-
-    const newPassword = generatePassword(passwordLength, allowedCharacters); //llama a la funcion y le da el largo con los caracteres permitidos
-    setPassword(newPassword); //va a actualizar el estado de la contraseña con la nueva contrase;a de la otra funcion
-  };
+  const [checkboxes, setCheckboxes] = useState({
+    uppercase: false,
+    lowercase: false,
+    numbers: false,
+    symbols: false
+  });
 
   return (
     <div className='general-container'>
@@ -53,7 +55,7 @@ const App = () => {
       </div>
 
       {/* checkboxes */}
-      {/* <div className='requirements-container'>
+      <div className='requirements-container'>
         {REQUIREMENTS_INFO.map(requirement => (
           <div key={requirement.id} className='requirements'>
             <span className='requirement-text'>{requirement.text}</span>
@@ -61,21 +63,27 @@ const App = () => {
               type='checkbox'
               id={requirement.id}
               className='input'
-              onChange={() => changeCheckbox(requirement, setRequirement)}
+              onChange={event =>
+                setCheckboxes({
+                  ...checkboxes,
+                  [requirement.id]: event.target.checked
+                })
+              }
             />
             <label htmlFor={requirement.id} className='label'></label>
           </div>
         ))}
-      </div> */}
+      </div>
 
-      <div className='requirements-container'>
+      {/* <div className='requirements-container'>
         <div className='requirements'>
           <span className='requirement-text'>Include Uppercase</span>
           <input
             type='checkbox'
             id='uppercase'
             className='input'
-            onChange={() => setRequirementUpperCase(!requirementUpperCase)}
+            onChange={() => setCheckboxes({...checkboxes, uppercase:!checkboxes.uppercase})} 
+            // quiero lo que ya tienes (objeto) y cambiar el elemento especifico
           />
           <label htmlFor='uppercase' className='label'></label>
         </div>
@@ -85,7 +93,7 @@ const App = () => {
             type='checkbox'
             id='lowercase'
             className='input'
-            onChange={() => setRequirementLowerCase(!requirementLowerCase)}
+            onChange={() => setCheckboxes({...checkboxes, lowercase:!checkboxes.lowercase})}
           />
           <label htmlFor='lowercase' className='label'></label>
         </div>
@@ -95,7 +103,7 @@ const App = () => {
             type='checkbox'
             id='numbers'
             className='input'
-            onChange={() => setRequirementNumbers(!requirementNumbers)}
+            onChange={() => setCheckboxes({...checkboxes, numbers:!checkboxes.numbers})}
           />
           <label htmlFor='numbers' className='label'></label>
         </div>
@@ -105,21 +113,38 @@ const App = () => {
             type='checkbox'
             id='symbols'
             className='input'
-            onChange={() => setRequirementSymbols(!requirementSymbols)}
+            onChange={() => setCheckboxes({...checkboxes, symbols:!checkboxes.symbols})}
           />
           <label htmlFor='symbols' className='label'></label>
         </div>
       </div>
+      */}
 
       <button
         className='button'
         disabled={isButtonDisabled()}
-        onClick={handlePasswordGenerator}
+        onClick={() =>
+          handlePasswordGenerator(passwordLength, setPassword, checkboxes)
+        }
       >
         Generate Password
       </button>
     </div>
   );
+};
+
+//funcion que envia los datos a la funcion generadora de contraseñas por fuera
+const handlePasswordGenerator = () => {
+  const allowedCharacters = handleCharactersBank(
+    requirementUpperCase,
+    requirementLowerCase,
+    requirementNumbers,
+    requirementSymbols
+  ); //llama a la funcion que maneja el banco de caracteres y le pasa los requisitos
+  console.log(allowedCharacters); //NO SE IMPRIMEEEEE
+
+  const newPassword = generatePassword(passwordLength, allowedCharacters); //llama a la funcion y le da el largo con los caracteres permitidos
+  setPassword(newPassword); //va a actualizar el estado de la contraseña con la nueva contrase;a de la otra funcion
 };
 
 const isButtonDisabled = (
@@ -146,17 +171,11 @@ const handleCharactersBank = (
   requirementNumbers,
   requirementSymbols
 ) => {
-  const charactersBank = {
-    symbols: '!@#$%^&*()_+-={}[]:;<>,.?/</>',
-    numbers: '1234567890',
-    uppercase: 'ABCDEFGHIJKLMNOPQRSTUVWXYZ',
-    lowercase: 'abcdefghijklmnopqrstuvwxyz'
-  };
-
   //variables globales
   let characters = ''; //banco de caracteres vacio al inicio
   //para asegurarse que tenga uno de cada unl
   let allowedCharacters = '';
+  // newPassword=
 
   if (requirementUpperCase) {
     const randomIndex = Math.floor(

@@ -169,3 +169,8 @@ body {
 .input:checked + .label::before {
   translate: 40px 5px;
 }
+
+.button:disabled{
+  background-color: grey;
+  background-image: none;
+}
